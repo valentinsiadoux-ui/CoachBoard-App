@@ -45,6 +45,8 @@ export const DiagramFrameSchema = z
   .object({
     title: z.string().min(1).max(40),
     caption: z.string().min(1).max(200),
+    /** Étiquette courte affichée à droite du titre de vignette (fiche de séance), ex. « 3c2 », « Passe ». */
+    tag: z.string().min(1).max(10).optional(),
     elements: z.array(DiagramElementSchema).max(20),
     actions: z.array(DiagramActionSchema).max(20).default([]),
     /** Positions de départ en pointillés. */
