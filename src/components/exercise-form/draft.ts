@@ -7,7 +7,7 @@ export type Draft = Omit<ExerciseInput, "id" | "diagram"> & {
   coachTips: { situation: string; tips: string[] }[];
 };
 
-export const emptyFrame = (title: string) => ({ title, caption: "À compléter", elements: [], actions: [], ghosts: [] });
+export const emptyFrame = (title: string) => ({ title, caption: "", elements: [], actions: [], ghosts: [] });
 
 export const newDraft = (): { draft: Draft; diagramText: string } => ({
   draft: {

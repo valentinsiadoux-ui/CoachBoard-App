@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DiagramFrameSchema, ExerciseSchema } from "@/lib/schemas";
-import { BASKET, COURT, MARKER_RADIUS } from "@/lib/court/geometry";
+import { lintDiagram, lintFrame } from "@/lib/diagram/lint";
 import { exercises } from "@/data/exercises";
 
 describe("exercices de démonstration", () => {
@@ -50,31 +50,19 @@ describe("règles de validation", () => {
 });
 
 describe("lisibilité des schémas", () => {
-  it("aucun pion ne se chevauche dans une vignette", () => {
-    for (const ex of exercises) {
-      const court = ex.diagram.court;
-      const { width, height } = COURT[court];
-      const r = MARKER_RADIUS[court];
-      ex.diagram.frames.forEach((f) => {
-        f.elements.forEach((a, i) =>
-          f.elements.slice(i + 1).forEach((b) => {
-            const d = Math.hypot((a.at.x - b.at.x) * width, (a.at.y - b.at.y) * height);
-            expect(d, `${ex.slug} · ${f.title} : ${a.id} / ${b.id}`).toBeGreaterThanOrEqual(2 * r);
-          }),
-        );
-      });
-    }
+  it("les exercices de démonstration respectent les règles de lisibilité", () => {
+    for (const ex of exercises) expect(lintDiagram(ex.diagram), ex.slug).toEqual([]);
   });
 
-  it("les tirs visent le panier", () => {
-    for (const ex of exercises) {
-      const basket = BASKET[ex.diagram.court];
-      ex.diagram.frames.flatMap((f) => f.actions).filter((a) => a.type === "shot").forEach((a) => {
-        const end = a.points[a.points.length - 1]!;
-        expect(Math.abs(end.x - basket.x), ex.slug).toBeLessThan(0.01);
-        expect(Math.abs(end.y - basket.y), ex.slug).toBeLessThan(0.01);
-      });
-    }
+  it("détecte chevauchements et tirs mal orientés", () => {
+    const frame = {
+      elements: [
+        { id: "a", kind: "attacker" as const, at: { x: 0.5, y: 0.5 }, hasBall: false },
+        { id: "b", kind: "defender" as const, at: { x: 0.51, y: 0.5 }, hasBall: false },
+      ],
+      actions: [{ type: "shot" as const, actor: "attacker" as const, points: [{ x: 0.5, y: 0.5 }, { x: 0.2, y: 0.2 }] }],
+    };
+    expect(lintFrame("half", frame).map((w) => w.message)).toEqual(["Pions qui se chevauchent (a / b)", "Un tir ne vise pas le panier"]);
   });
 });
 

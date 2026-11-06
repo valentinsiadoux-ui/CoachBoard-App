@@ -51,6 +51,14 @@ TEST_DATABASE_URL=postgres://postgres@localhost:5432/postgres npm run test:db
 
 Une base temporaire est créée puis supprimée. Sans `TEST_DATABASE_URL`, ces tests sont ignorés.
 
+## Éditeur de schémas
+
+Dans le formulaire d'exercice, section 06 : palette d'outils (joueurs, cône, course, dribble,
+passe, tir, position de départ), placement au clic, déplacement par glisser-déposer (souris ou
+doigt), tracés aimantés sur les joueurs, tir dirigé automatiquement vers le panier, vignettes
+(« Vignette suivante » reprend les positions), annuler / rétablir, alertes de lisibilité
+(pions qui se chevauchent, tir hors panier). Le JSON reste accessible en mode avancé.
+
 ## Export PDF
 
 « Exporter en PDF » ouvre la fenêtre d'impression du navigateur : choisir « Enregistrer au

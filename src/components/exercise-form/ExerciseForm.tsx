@@ -5,6 +5,8 @@ import { AGE_CATEGORIES, type ExerciseInput } from "@/lib/schemas";
 import { DIFFICULTY_LABELS } from "@/lib/filters";
 import type { Membership } from "@/lib/repo/types";
 import { ExerciseSheet } from "@/components/exercise/ExerciseSheet";
+import { DiagramEditor } from "@/components/diagram-editor/DiagramEditor";
+import { parseEditorDiagram } from "@/lib/diagram/ops";
 import { saveExercise, type SaveState } from "@/app/exercices/actions";
 import { buildPayload, draftFromExercise, newDraft, validateDraft, type Draft } from "./draft";
 import { toFormIssues, type FormIssue } from "./issues";
@@ -49,6 +51,13 @@ export function ExerciseForm({ initial, clubs }: Props) {
   };
 
   const built = buildPayload(draft, diagramText);
+  const editorDiagram = useMemo(() => {
+    try {
+      return parseEditorDiagram(JSON.parse(diagramText));
+    } catch {
+      return null;
+    }
+  }, [diagramText]);
   const preview = built.ok ? validateDraft(built.payload) : null;
   const payload = built.ok ? JSON.stringify(built.payload) : "";
 
@@ -178,8 +187,20 @@ export function ExerciseForm({ initial, clubs }: Props) {
       </Section>
 
       <Section n="06" title="Le film (schéma tactique)">
-        <TextArea id="diagram" label="Schéma au format JSON" rows={14} value={diagramText} onChange={setDiagramText}
-          hint="Coordonnées normalisées de 0 à 1. Un éditeur visuel remplacera ce champ dans une étape ultérieure." />
+        {editorDiagram ? (
+          <DiagramEditor value={editorDiagram} onChange={(d) => setDiagramText(JSON.stringify(d, null, 2))} />
+        ) : (
+          <p role="alert" className="rounded-lg bg-warn/10 p-3 text-sm text-warn">
+            Le schéma ne peut pas être affiché dans l’éditeur : corrigez le JSON ci-dessous.
+          </p>
+        )}
+        <details className="text-sm" open={!editorDiagram}>
+          <summary className="cursor-pointer text-muted">Mode avancé : schéma au format JSON</summary>
+          <div className="mt-2">
+            <TextArea id="diagram" label="Schéma au format JSON" rows={14} value={diagramText} onChange={setDiagramText}
+              hint="Coordonnées normalisées de 0 à 1 (x : largeur ; y : depuis la ligne de fond en demi-terrain)." />
+          </div>
+        </details>
       </Section>
 
       <div className="sticky bottom-0 flex items-center gap-3 border-t border-ink/10 bg-paper/95 py-4 backdrop-blur">
