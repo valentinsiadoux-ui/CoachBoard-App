@@ -1,28 +1,36 @@
 import { z } from "zod";
 
-/** Messages d'erreur Zod en français (affichés tels quels dans les formulaires). */
-export const frenchErrorMap: z.ZodErrorMap = (issue, ctx) => {
-  switch (issue.code) {
-    case z.ZodIssueCode.invalid_type:
-      if (issue.received === "undefined" || issue.received === "null") return { message: "Champ obligatoire" };
-      if (issue.expected === "number" || issue.expected === "integer") return { message: issue.received === "nan" ? "Nombre attendu" : "Nombre entier attendu" };
-      return { message: "Valeur invalide" };
-    case z.ZodIssueCode.too_small:
-      if (issue.type === "string") return { message: issue.minimum === 1 ? "Champ obligatoire" : `Au moins ${issue.minimum} caractères` };
-      if (issue.type === "array") return { message: `Au moins ${issue.minimum} élément(s)` };
-      if (issue.type === "number") return { message: `Minimum ${issue.minimum}` };
-      break;
-    case z.ZodIssueCode.too_big:
-      if (issue.type === "string") return { message: `${issue.maximum} caractères maximum` };
-      if (issue.type === "array") return { message: `${issue.maximum} élément(s) maximum` };
-      if (issue.type === "number") return { message: `Maximum ${issue.maximum}` };
-      break;
-    case z.ZodIssueCode.invalid_enum_value:
-      return { message: `Valeur attendue : ${issue.options.join(", ")}` };
-    case z.ZodIssueCode.invalid_string:
-      return { message: "Format invalide" };
-  }
-  return { message: ctx.defaultError };
-};
-
-z.setErrorMap(frenchErrorMap);
+/**
+ * Messages d'erreur en français, affichés tels quels dans les formulaires.
+ * Base : la traduction française fournie par Zod ; par-dessus, des formulations
+ * plus courtes pour les cas courants.
+ */
+z.config(z.locales.fr());
+z.config({
+  customError: (issue) => {
+    switch (issue.code) {
+      case "invalid_type":
+        if (issue.input === undefined || issue.input === null) return "Champ obligatoire";
+        if (issue.expected === "number" || issue.expected === "int") {
+          return typeof issue.input === "number" && !Number.isNaN(issue.input) ? "Nombre entier attendu" : "Nombre attendu";
+        }
+        return "Valeur invalide";
+      case "too_small":
+        if (issue.origin === "string") return Number(issue.minimum) === 1 ? "Champ obligatoire" : `Au moins ${issue.minimum} caractères`;
+        if (issue.origin === "array") return `Au moins ${issue.minimum} élément(s)`;
+        if (issue.origin === "number") return `Minimum ${issue.minimum}`;
+        return undefined;
+      case "too_big":
+        if (issue.origin === "string") return `${issue.maximum} caractères maximum`;
+        if (issue.origin === "array") return `${issue.maximum} élément(s) maximum`;
+        if (issue.origin === "number") return `Maximum ${issue.maximum}`;
+        return undefined;
+      case "invalid_value":
+        return `Valeur attendue : ${issue.values.map(String).join(", ")}`;
+      case "invalid_format":
+        return "Format invalide";
+      default:
+        return undefined; // traduction française de Zod
+    }
+  },
+});

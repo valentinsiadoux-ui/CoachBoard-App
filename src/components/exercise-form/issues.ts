@@ -1,4 +1,4 @@
-import type { ZodIssue } from "zod";
+import type { z } from "zod";
 
 export type FormIssue = { path: string; label: string; message: string };
 
@@ -78,5 +78,8 @@ export function labelForPath(path: (string | number)[], sections: Record<string,
   return parts.join(" › ");
 }
 
-export const toFormIssues = (issues: ZodIssue[], sections: Record<string, string> = EXERCISE_SECTIONS): FormIssue[] =>
-  issues.map((i) => ({ path: i.path.join("."), label: labelForPath(i.path, sections), message: i.message }));
+export const toFormIssues = (issues: z.core.$ZodIssue[], sections: Record<string, string> = EXERCISE_SECTIONS): FormIssue[] =>
+  issues.map((i) => {
+    const path = i.path.filter((p): p is string | number => typeof p !== "symbol");
+    return { path: path.join("."), label: labelForPath(path, sections), message: i.message };
+  });

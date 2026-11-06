@@ -86,3 +86,13 @@ describe("cohérence et messages", () => {
     expect(r.error?.issues[0]?.message).toBe("Champ obligatoire");
   });
 });
+
+describe("messages d'erreur (Zod 4)", () => {
+  const ex = exercises[0]!;
+  const msg = (patch: object) => ExerciseSchema.safeParse({ ...ex, ...patch }).error?.issues[0]?.message;
+  it("nombre vide, entier, valeur hors liste", () => {
+    expect(msg({ params: { ...ex.params, players: { min: Number.NaN, max: 12 } } })).toBe("Nombre attendu");
+    expect(msg({ params: { ...ex.params, players: { min: 2.5, max: 12 } } })).toBe("Nombre entier attendu");
+    expect(msg({ difficulty: "expert" })).toBe("Valeur attendue : debutant, intermediaire, avance");
+  });
+});
