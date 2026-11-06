@@ -1,4 +1,5 @@
 import { SessionSchema } from "@/lib/schemas";
+import { exercice3c2p1Tout } from "@/data/exercises/3c2p1-tout-terrain";
 
 /** Séance #14 de la fiche de référence A4 (données de démonstration). */
 export const seance14 = SessionSchema.parse({
@@ -17,7 +18,7 @@ export const seance14 = SessionSchema.parse({
   blocks: [
     { phase: "echauffement", durationMin: 15, content: "Passes en dynamique & lignes de course", goal: "Activer le cardio, orienter les épaules vers l’avant." },
     { phase: "technique", durationMin: 20, content: "Fixation du défenseur & relance (2 contre 1)", goal: "Obligation d’attaquer le défenseur direct pour créer le décalage." },
-    { phase: "situation", durationMin: 20, exerciseId: "ex-3c2p1-tout", isFlagship: true, goal: "Défi : 10 paniers en 4 min avec 3 passes min. par possession." },
+    { phase: "situation", durationMin: 20, exerciseId: exercice3c2p1Tout.id, isFlagship: true, goal: "Défi : 10 paniers en 4 min avec 3 passes min. par possession." },
     { phase: "jeu", durationMin: 25, content: "5 contre 5 · contre-attaque dirigée", goal: "Règle bonus : +3 pts pour tout panier inscrit en moins de 8 secondes." },
     { phase: "retour-calme", durationMin: 10, content: "Lancers francs & débriefing", goal: "Faire baisser le rythme cardiaque, auto-évaluation du groupe." },
   ],

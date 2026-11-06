@@ -2,7 +2,7 @@ import { ExerciseSchema } from "@/lib/schemas";
 import { challenge, coachTips, equipment, technicalPoints, variants } from "./shared";
 
 export const exercice3c2p1Tout = ExerciseSchema.parse({
-  id: "ex-3c2p1-tout",
+  id: "00000000-0000-4000-8000-000000000002",
   slug: "3-contre-2-plus-1-tout-terrain",
   title: "3 contre 2 + 1",
   titleAccent: "+ 1",
