@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { SessionEntry, Viewer } from "@/lib/repo";
 import { deleteSession, duplicateSession } from "@/app/seances/actions";
-import { PrintButton } from "./PrintButton";
+import { ExportPdfButton } from "@/components/print/ExportPdfButton";
+import { pdfFileName } from "@/lib/pdf-filename";
 
 const btn = "rounded-lg border border-ink/20 px-3 py-1.5 text-sm font-medium hover:border-ink";
 
@@ -10,7 +11,8 @@ export function SessionActions({ entry, viewer }: { entry: SessionEntry; viewer:
   const member = viewer.mode === "supabase" && entry.clubId && viewer.memberships.some((m) => m.clubId === entry.clubId);
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <PrintButton className={btn} />
+      <ExportPdfButton className={btn} fileName={pdfFileName(`Séance ${entry.session.number}`, entry.session.title)} />
+      <Link href={`/seances/${id}/dossier`} className={btn} title="Fiche de séance + fiches de tous ses exercices">Dossier complet</Link>
       {entry.canEdit && <Link href={`/seances/${id}/modifier`} className={btn}>Modifier</Link>}
       {member && (
         <form action={duplicateSession}>

@@ -26,7 +26,8 @@ body {
 }
 
 @page { size: A4 landscape; margin: 10mm; }
-/* La fiche de séance s'imprime en A4 portrait (page nommée). */
+/* Pages nommées : fiche d'exercice en A4 paysage, fiche de séance en A4 portrait. */
+@page fiche { size: A4 landscape; margin: 8mm; }
 @page seance { size: A4 portrait; margin: 10mm; }
 
 @media print {
@@ -34,4 +35,8 @@ body {
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   /* Réduction pour tenir sur une seule page A4. */
   .session-sheet { page: seance; max-width: none; padding: 0; zoom: 0.8; }
+  /* Mise en page figée à 1333 px (format des fiches de référence) puis réduite à la page. */
+  .exercise-sheet { page: fiche; width: 1333px; max-width: none; padding: 0; zoom: var(--fiche-zoom, 0.78); }
+  /* Chaque fiche d'un dossier commence sur une nouvelle page. */
+  .print-break { break-before: page; }
 }

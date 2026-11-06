@@ -71,9 +71,9 @@ export function SessionSheet({ session: s, exercises, linkExercises = true }: Pr
           Séance #{s.number} <span className="text-brand">·</span> {s.title}
         </h1>
         {keyInfo.length > 0 && (
-          <dl className="grid grid-cols-2 gap-y-3 border-b border-ink/10 pb-3 sm:grid-cols-4 sm:divide-x sm:divide-ink/10">
+          <dl className="grid grid-cols-2 gap-y-3 border-b border-ink/10 pb-3 sm:grid-cols-4 print:grid-cols-4 sm:divide-x print:divide-x sm:divide-ink/10 print:divide-ink/10">
             {keyInfo.map(([label, value]) => (
-              <div key={label} className="sm:px-4 sm:first:pl-0">
+              <div key={label} className="sm:px-4 print:px-4 sm:first:pl-0 print:first:pl-0">
                 <dt className="text-xs font-medium uppercase tracking-widest text-muted">{label}</dt>
                 <dd className="font-semibold leading-snug">{value}</dd>
               </div>
@@ -171,7 +171,7 @@ function FlagshipSheet({ session: s, exercise: ex }: { session: Session; exercis
           <p className="text-sm">{f.challengeStatement || ex.challenge.statement}</p>
         </div>
       </div>
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid gap-6 sm:grid-cols-2 print:grid-cols-2">
         <div>
           <h3 className="mb-2 font-display text-lg font-bold uppercase tracking-wide">Consignes techniques clés</h3>
           <ul className="list-disc space-y-1 pl-5 text-sm">
@@ -188,7 +188,7 @@ function FlagshipSheet({ session: s, exercise: ex }: { session: Session; exercis
         </div>
       </div>
       {f.accompanimentTip && <TipBox title="Assistance · conseil d’accompagnement">{f.accompanimentTip}</TipBox>}
-      <div className="grid grid-cols-2 gap-3 border-t border-ink/10 pt-3 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 border-t border-ink/10 pt-3 sm:grid-cols-4 print:grid-cols-4">
         {ex.diagram.frames.map((fr, i) => (
           <figure key={fr.title}>
             <figcaption className="mb-1 flex items-center gap-1.5 font-display text-base font-bold uppercase">

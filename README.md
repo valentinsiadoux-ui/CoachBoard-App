@@ -51,6 +51,13 @@ TEST_DATABASE_URL=postgres://postgres@localhost:5432/postgres npm run test:db
 
 Une base temporaire est créée puis supprimée. Sans `TEST_DATABASE_URL`, ces tests sont ignorés.
 
+## Export PDF
+
+« Exporter en PDF » ouvre la fenêtre d'impression du navigateur : choisir « Enregistrer au
+format PDF ». Chaque fiche tient sur une page (exercice : A4 paysage ; séance : A4 portrait) et
+le fichier est nommé d'après la fiche. « Dossier complet » réunit la fiche de séance et les
+fiches de tous ses exercices dans un seul PDF. Mise en page vérifiée avec Chromium (Chrome, Edge).
+
 ## Structure
 
 - `src/lib/schemas/` : schémas Zod, source unique de vérité (UI, base, sorties de Claude)

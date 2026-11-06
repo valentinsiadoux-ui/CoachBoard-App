@@ -1,16 +1,22 @@
 import Link from "next/link";
 import type { ExerciseEntry, Viewer } from "@/lib/repo";
 import { deleteExercise, duplicateExercise } from "@/app/exercices/actions";
+import { ExportPdfButton } from "@/components/print/ExportPdfButton";
+import { pdfFileName } from "@/lib/pdf-filename";
 
 const btn = "rounded-lg border border-ink/20 px-3 py-1.5 text-sm font-medium hover:border-ink";
 
 /** Barre d'actions d'une fiche : modifier, dupliquer dans un club, supprimer (avec confirmation). */
 export function ExerciseActions({ entry, viewer }: { entry: ExerciseEntry; viewer: Viewer }) {
-  if (viewer.mode !== "supabase") return null;
-  const { id, slug } = entry.exercise;
+  const { id, slug, title, params } = entry.exercise;
+  const exportButton = (
+    <ExportPdfButton className={btn} fileName={pdfFileName("Fiche exercice", title, params.space === "demi-terrain" ? "Demi-terrain" : "Tout-terrain")} />
+  );
+  if (viewer.mode !== "supabase") return exportButton;
   const clubs = viewer.memberships;
   return (
     <div className="flex flex-wrap items-center gap-2">
+      {exportButton}
       {entry.canEdit && <Link href={`/exercices/${slug}/modifier`} className={btn}>Modifier</Link>}
       {clubs.length > 0 && (
         <form action={duplicateExercise} className="flex items-center gap-2">

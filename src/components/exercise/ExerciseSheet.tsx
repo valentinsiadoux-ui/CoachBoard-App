@@ -105,7 +105,7 @@ export function ExerciseSheet({ exercise: ex }: { exercise: Exercise }) {
           {full && <VolumeBadge pct={FILM_VOLUME_PCT.full} />}
         </div>
       </div>
-      <div className={`mt-3 grid gap-3 ${full ? "sm:grid-cols-2 xl:grid-cols-4" : "sm:grid-cols-2"}`}>
+      <div className={`mt-3 grid gap-3 ${full ? "sm:grid-cols-2 xl:grid-cols-4 print:grid-cols-4" : "sm:grid-cols-2 print:grid-cols-2"}`}>
         {ex.diagram.frames.map((f, i) => (
           <figure key={f.title} className="rounded-lg bg-paper p-3">
             <figcaption className="mb-2 flex items-center gap-2 font-display text-lg font-bold uppercase">
@@ -121,18 +121,18 @@ export function ExerciseSheet({ exercise: ex }: { exercise: Exercise }) {
   );
 
   return (
-    <article className="mx-auto max-w-[1600px] px-6 py-6">
+    <article className="exercise-sheet mx-auto max-w-[1600px] px-6 py-6">
       <header className="mb-6 border-b-2 border-ink pb-4">
-        <div className="grid items-center gap-3 md:grid-cols-[1fr_auto_1fr]">
+        <div className="grid items-center gap-3 md:grid-cols-[1fr_auto_1fr] print:grid-cols-[1fr_auto_1fr]">
           <Logo />
           <div className="text-center">
             {ex.kicker && <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted">{ex.kicker}</p>}
-            <h1 className="font-display text-4xl font-bold uppercase md:text-5xl">
+            <h1 className="font-display text-4xl font-bold uppercase md:text-5xl print:text-5xl">
               <AccentTitle title={ex.title} accent={ex.titleAccent} />{" "}
               <span className="text-[0.6em] font-semibold text-ink/70">· {full ? "Tout-terrain" : "Demi-terrain"}</span>
             </h1>
           </div>
-          <div className="flex flex-wrap gap-2 md:justify-end">
+          <div className="flex flex-wrap gap-2 md:justify-end print:justify-end">
             <Pill active>{ex.ageRange.from} → {ex.ageRange.to}</Pill>
             {ex.themes.map((t) => <Pill key={t}>{t}</Pill>)}
             <Pill>{spaceLabel}</Pill>
@@ -142,7 +142,7 @@ export function ExerciseSheet({ exercise: ex }: { exercise: Exercise }) {
 
       {full ? (
         <div className="space-y-6">
-          <div className="grid gap-8 lg:grid-cols-3 lg:divide-x lg:divide-ink/10 lg:[&>*:not(:first-child)]:pl-8">
+          <div className="grid gap-8 lg:grid-cols-3 print:grid-cols-3 lg:divide-x print:divide-x lg:divide-ink/10 print:divide-ink/10 lg:[&>*:not(:first-child)]:pl-8 print:[&>*:not(:first-child)]:pl-8">
             <div className="space-y-6">{params}{challenge}</div>
             {steps}
             <div className="space-y-6">{technique}{tips}</div>
@@ -150,9 +150,9 @@ export function ExerciseSheet({ exercise: ex }: { exercise: Exercise }) {
           {film}
         </div>
       ) : (
-        <div className="grid gap-8 lg:grid-cols-[1fr_1fr_1.5fr]">
+        <div className="grid gap-8 lg:grid-cols-[1fr_1fr_1.5fr] print:grid-cols-[1fr_1fr_1.5fr]">
           <div className="space-y-6">{params}{challenge}{tips}</div>
-          <div className="space-y-6 lg:border-l lg:border-ink/10 lg:pl-8">{steps}{technique}</div>
+          <div className="space-y-6 lg:border-l print:border-l lg:border-ink/10 print:border-ink/10 lg:pl-8 print:pl-8">{steps}{technique}</div>
           {film}
         </div>
       )}
