@@ -84,3 +84,17 @@ describe("mise en valeur du titre", () => {
     expect(ExerciseSchema.safeParse(bad).success).toBe(false);
   });
 });
+
+describe("cohérence et messages", () => {
+  it("refuse un schéma plein terrain pour un exercice en demi-terrain", () => {
+    const ex = exercises[0]!;
+    const r = ExerciseSchema.safeParse({ ...ex, params: { ...ex.params, space: "tout-terrain" } });
+    expect(r.success).toBe(false);
+    expect(r.error?.issues[0]?.path).toEqual(["diagram", "court"]);
+  });
+
+  it("les messages d'erreur sont en français", () => {
+    const r = ExerciseSchema.safeParse({ ...exercises[0]!, title: "" });
+    expect(r.error?.issues[0]?.message).toBe("Champ obligatoire");
+  });
+});

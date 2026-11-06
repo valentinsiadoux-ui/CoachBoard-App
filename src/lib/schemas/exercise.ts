@@ -57,9 +57,13 @@ export const ExerciseSchema = z.object({
 
   /** 06 · Le film (schéma tactique) */
   diagram: DiagramSchema,
-}).refine((e) => !e.titleAccent || e.title.includes(e.titleAccent), {
-  path: ["titleAccent"],
-  message: "La mise en valeur doit être une partie du titre",
+}).superRefine((e, ctx) => {
+  if (e.titleAccent && !e.title.includes(e.titleAccent)) {
+    ctx.addIssue({ code: "custom", path: ["titleAccent"], message: "La mise en valeur doit être une partie du titre" });
+  }
+  if ((e.params.space === "demi-terrain") !== (e.diagram.court === "half")) {
+    ctx.addIssue({ code: "custom", path: ["diagram", "court"], message: "Le terrain du schéma doit correspondre à l'espace choisi" });
+  }
 });
 export type Exercise = z.infer<typeof ExerciseSchema>;
 /** Données saisies/générées avant application des valeurs par défaut Zod. */
