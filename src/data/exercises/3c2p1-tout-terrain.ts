@@ -26,7 +26,6 @@ export const exercice3c2p1Tout = ExerciseSchema.parse({
   technicalPoints,
   variants,
   coachTips,
-  volumeSharePct: 40,
   diagram: {
     court: "full",
     frames: [

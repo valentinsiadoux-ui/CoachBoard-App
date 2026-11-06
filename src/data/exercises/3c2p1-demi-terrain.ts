@@ -26,7 +26,6 @@ export const exercice3c2p1Demi = ExerciseSchema.parse({
   technicalPoints,
   variants,
   coachTips,
-  volumeSharePct: 34,
   diagram: {
     court: "half",
     frames: [

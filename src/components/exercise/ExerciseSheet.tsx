@@ -2,6 +2,12 @@ import type { Exercise } from "@/lib/schemas";
 import { CourtDiagram } from "@/components/court/CourtDiagram";
 import { BulbIcon, Logo, Pill, SectionTitle } from "./parts";
 
+/**
+ * Part de la surface de la fiche occupée par le film (« volume spatial »).
+ * Propriété de la mise en page, pas de l'exercice : à recalculer si la grille change.
+ */
+const FILM_VOLUME_PCT = { half: 34, full: 40 } as const;
+
 const fmtRange = (r: { min: number; max: number }, unit = "") =>
   r.min === r.max ? `${r.min}${unit}` : `${r.min} – ${r.max}${unit}`;
 
@@ -92,11 +98,11 @@ export function ExerciseSheet({ exercise: ex }: { exercise: Exercise }) {
       <div className={`flex flex-wrap items-center gap-x-6 gap-y-2 ${full ? "justify-between" : ""}`}>
         <div className="flex flex-1 items-center justify-between gap-3">
           <SectionTitle n="06" className="mb-0">{full ? "Le film de l’exercice" : "Le film"} · {spaceLabel}</SectionTitle>
-          {!full && ex.volumeSharePct && <VolumeBadge pct={ex.volumeSharePct} />}
+          {!full && <VolumeBadge pct={FILM_VOLUME_PCT.half} />}
         </div>
         <div className={`flex items-center gap-4 ${full ? "" : "w-full"}`}>
           <Legend />
-          {full && ex.volumeSharePct && <VolumeBadge pct={ex.volumeSharePct} />}
+          {full && <VolumeBadge pct={FILM_VOLUME_PCT.full} />}
         </div>
       </div>
       <div className={`mt-3 grid gap-3 ${full ? "sm:grid-cols-2 xl:grid-cols-4" : "sm:grid-cols-2"}`}>

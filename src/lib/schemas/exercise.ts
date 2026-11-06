@@ -57,8 +57,6 @@ export const ExerciseSchema = z.object({
 
   /** 06 · Le film (schéma tactique) */
   diagram: DiagramSchema,
-  /** Badge « ≈ N % du volume » affiché à côté du film. */
-  volumeSharePct: z.number().int().min(1).max(100).optional(),
 }).refine((e) => !e.titleAccent || e.title.includes(e.titleAccent), {
   path: ["titleAccent"],
   message: "La mise en valeur doit être une partie du titre",
