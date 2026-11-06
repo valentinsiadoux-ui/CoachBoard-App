@@ -1,4 +1,4 @@
-import type { Exercise, Session } from "@/lib/schemas";
+import type { Cycle, Exercise, Session } from "@/lib/schemas";
 import type { ExerciseFilters } from "@/lib/filters";
 import type { ClubRole } from "@/lib/supabase/database.types";
 
@@ -42,4 +42,15 @@ export interface SessionReader {
   getById(id: string): Promise<SessionEntry | null>;
   /** Séances dont une phase reprend cet exercice. */
   usingExercise(exerciseId: string): Promise<SessionRef[]>;
+}
+
+export type CycleEntry = { cycle: Cycle; clubId: string | null; clubName: string | null; canEdit: boolean };
+export type CycleRef = { id: string; title: string; startDate: string };
+
+/** Lecture des cycles : même contrat en démonstration et avec Supabase. */
+export interface CycleReader {
+  list(): Promise<CycleEntry[]>;
+  getById(id: string): Promise<CycleEntry | null>;
+  /** Cycles dont une semaine prévoit cette séance. */
+  containingSession(sessionId: string): Promise<CycleRef[]>;
 }

@@ -9,7 +9,8 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { Client } from "pg";
 import { exercises } from "@/data/exercises";
 import { seance14 } from "@/data/sessions/seance-14";
-import { exerciseToContent, sessionToContent } from "@/lib/db/mapping";
+import { cycleToContent, exerciseToContent, sessionToContent } from "@/lib/db/mapping";
+import { cycleTransition } from "@/data/cycles/cycle-transition";
 
 const ADMIN_URL = process.env.TEST_DATABASE_URL;
 const root = new URL("../../", import.meta.url);
@@ -62,6 +63,9 @@ describe.skipIf(!ADMIN_URL)("base de données · migration et RLS", () => {
       q("insert into exercises (club_id, content) values ($1, $2) returning id, author_id", [clubId, content(slug)]),
     ).then((r) => r.rows[0] as { id: string; author_id: string });
 
+  const insertCycle = (user: User, clubId: string, content: unknown) =>
+    as(user, (q) => q("insert into cycles (club_id, content) values ($1, $2)", [clubId, content]));
+
   beforeAll(async () => {
     admin = new Client({ connectionString: ADMIN_URL });
     await admin.connect();
@@ -73,6 +77,7 @@ describe.skipIf(!ADMIN_URL)("base de données · migration et RLS", () => {
     await db.query(sql("tests/db/supabase-stub.sql"));
     await db.query(sql("supabase/migrations/20261106000000_banque_exercices.sql"));
     await db.query(sql("supabase/migrations/20261107000000_journal_ia.sql"));
+    await db.query(sql("supabase/migrations/20261108000000_cycles.sql"));
     await db.query(sql("supabase/seed.sql"));
     for (const [name, id] of Object.entries(USERS)) {
       await db.query("insert into auth.users (id, email) values ($1, $2)", [id, `${name}@club.test`]);
@@ -237,6 +242,26 @@ describe.skipIf(!ADMIN_URL)("base de données · migration et RLS", () => {
         q("select number from sessions where content @> $1", [JSON.stringify({ blocks: [{ exerciseId: seance14.blocks[2]!.exerciseId }] })]),
       );
       expect(r.rows).toEqual([{ number: 14 }]);
+    });
+  });
+
+  describe("cycles", () => {
+    it("partagés avec le club, modifiables par l'auteur ou un admin, retrouvables par séance", async () => {
+      const sessionId = (await as("bob", (q) => q("select id from sessions where club_id = $1", [clubA]))).rows[0].id;
+      const content = cycleToContent({ ...cycleTransition, weeks: [{ theme: "S1", goal: "", sessionIds: [sessionId] }] });
+      const id = (await as("bob", (q) => q("insert into cycles (club_id, content) values ($1, $2) returning id, weeks", [clubA, content]))).rows[0];
+      expect(id.weeks).toBe(1);
+      expect((await as("carol", (q) => q("select 1 from cycles"))).rowCount).toBe(0);
+      expect((await as("eve", (q) => q("update cycles set content = content where id = $1", [id.id]))).rowCount).toBe(0);
+      expect((await as("alice", (q) => q("update cycles set content = content where id = $1", [id.id]))).rowCount).toBe(1);
+      const found = await as("eve", (q) => q("select id from cycles where content @> $1", [JSON.stringify({ weeks: [{ sessionIds: [sessionId] }] })]));
+      expect(found.rows).toEqual([{ id: id.id }]);
+      await expect(insertCycle("carol", clubA, content)).rejects.toThrow(/row-level security/);
+    });
+
+    it("refuse une date de début mal formée", async () => {
+      const bad = { ...cycleToContent(cycleTransition), startDate: "02/11/2026" };
+      await expect(insertCycle("bob", clubA, bad)).rejects.toThrow(/cycles_start_date/);
     });
   });
 

@@ -2,12 +2,13 @@ import "server-only";
 import { cache } from "react";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createSupabaseServer } from "@/lib/supabase/server";
-import { demoReader, demoSessionReader } from "./demo";
+import { demoCycleReader, demoReader, demoSessionReader } from "./demo";
+import { SupabaseCycleRepository } from "./cycles";
 import { SupabaseSessionRepository } from "./sessions";
 import { SupabaseExerciseRepository } from "./supabase";
-import type { ExerciseReader, Membership, SessionReader, Viewer } from "./types";
+import type { CycleReader, ExerciseReader, Membership, SessionReader, Viewer } from "./types";
 
-export type { ExerciseEntry, Membership, Scope, SessionEntry, SessionRef, Viewer } from "./types";
+export type { CycleEntry, CycleRef, ExerciseEntry, Membership, Scope, SessionEntry, SessionRef, Viewer } from "./types";
 
 /** Utilisateur courant et ses clubs (mis en cache le temps d'une requête). */
 export const getViewer = cache(async (): Promise<Viewer | null> => {
@@ -58,4 +59,16 @@ export async function getWritableSessions(): Promise<{ repo: SupabaseSessionRepo
 export async function exercisesById(ids: string[]) {
   const entries = await (await getReader()).getByIds(ids);
   return Object.fromEntries(entries.map((e) => [e.exercise.id, e.exercise]));
+}
+
+export async function getCycleReader(): Promise<CycleReader> {
+  const viewer = await getViewer();
+  if (!viewer || viewer.mode === "demo") return demoCycleReader;
+  return new SupabaseCycleRepository(await createSupabaseServer(), viewer.userId, viewer.memberships);
+}
+
+export async function getWritableCycles(): Promise<{ repo: SupabaseCycleRepository; viewer: Extract<Viewer, { mode: "supabase" }> }> {
+  const viewer = await getViewer();
+  if (!viewer || viewer.mode !== "supabase") throw new Error("Écriture impossible : Supabase n'est pas configuré ou vous n'êtes pas connecté.");
+  return { repo: new SupabaseCycleRepository(await createSupabaseServer(), viewer.userId, viewer.memberships), viewer };
 }

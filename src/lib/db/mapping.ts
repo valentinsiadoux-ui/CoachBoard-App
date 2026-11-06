@@ -1,4 +1,4 @@
-import { ExerciseSchema, SessionSchema, type Exercise, type Session } from "@/lib/schemas";
+import { CycleSchema, ExerciseSchema, SessionSchema, type Cycle, type Exercise, type Session } from "@/lib/schemas";
 
 /**
  * Conversion document Zod ↔ ligne SQL.
@@ -7,6 +7,7 @@ import { ExerciseSchema, SessionSchema, type Exercise, type Session } from "@/li
  */
 export type ExerciseContent = Omit<Exercise, "id">;
 export type SessionContent = Omit<Session, "id">;
+export type CycleContent = Omit<Cycle, "id">;
 
 export type ContentRow<T> = { id: string; content: T };
 
@@ -26,4 +27,13 @@ export function sessionToContent(s: Session): SessionContent {
 
 export function rowToSession(row: ContentRow<unknown>): Session {
   return SessionSchema.parse({ ...(row.content as object), id: row.id });
+}
+
+export function cycleToContent(c: Cycle): CycleContent {
+  const { id: _id, ...content } = CycleSchema.parse(c);
+  return content;
+}
+
+export function rowToCycle(row: ContentRow<unknown>): Cycle {
+  return CycleSchema.parse({ ...(row.content as object), id: row.id });
 }

@@ -37,6 +37,7 @@ body {
   .session-sheet { page: seance; max-width: none; padding: 0; zoom: 0.8; }
   /* Mise en page figée à 1333 px (format des fiches de référence) puis réduite à la page. */
   .exercise-sheet { page: fiche; width: 1333px; max-width: none; padding: 0; zoom: var(--fiche-zoom, 0.78); }
+  .cycle-sheet { page: fiche; width: 1333px; max-width: none; padding: 0; zoom: 0.78; }
   /* Chaque fiche d'un dossier commence sur une nouvelle page. */
   .print-break { break-before: page; }
 }

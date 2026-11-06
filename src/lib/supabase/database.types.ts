@@ -35,11 +35,14 @@ type ExerciseGenerated = {
 
 type SessionGenerated = { number: number; title: string; category: number; duration_min: number };
 
+type CycleGenerated = { title: string; category: number; start_date: string; weeks: number };
+
 export type Database = {
   public: {
     Tables: {
       exercises: ContentTable<ExerciseGenerated>;
       sessions: ContentTable<SessionGenerated>;
+      cycles: ContentTable<CycleGenerated>;
       profiles: {
         Row: { id: string; display_name: string | null; created_at: string };
         Insert: never;

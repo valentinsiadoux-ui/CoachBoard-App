@@ -59,6 +59,14 @@ doigt), tracés aimantés sur les joueurs, tir dirigé automatiquement vers le p
 (« Vignette suivante » reprend les positions), annuler / rétablir, alertes de lisibilité
 (pions qui se chevauchent, tir hors panier). Le JSON reste accessible en mode avancé.
 
+## Cycles de progression
+
+Un cycle planifie les séances d'une équipe sur plusieurs semaines : objectif général, thème et
+objectif de progression par semaine, séances prévues, critères de réussite à évaluer en fin de
+cycle. La fiche affiche la frise des semaines (dates, séances, charge en minutes) et s'exporte
+en PDF sur une page A4 paysage. Mise en service : exécuter
+`supabase/migrations/20261108000000_cycles.sql`.
+
 ## Co-pilote IA (Claude)
 
 Sur « Nouvel exercice » et « Nouvelle séance », le co-pilote propose une fiche complète à partir
@@ -99,4 +107,4 @@ Après une mise à jour des exercices de démonstration, régénérer et réappl
 ## Feuille de route
 
 0. Fondations · 1. Fiche d'exercice · 2. Banque (Supabase) · 3. Concepteur de séance
-4. Export PDF · 5. Co-pilote Claude · 6. Cycles · 7. V2+
+4. Export PDF · 4 bis. Éditeur de schémas · 5. Co-pilote Claude · 6. Cycles · 7. V2+ (voir ROADMAP-V2.md)

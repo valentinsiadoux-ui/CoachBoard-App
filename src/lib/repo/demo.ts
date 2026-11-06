@@ -1,7 +1,8 @@
 import { exercises } from "@/data/exercises";
 import { matchesFilters } from "@/lib/filters";
 import { seance14 } from "@/data/sessions/seance-14";
-import type { ExerciseEntry, ExerciseReader, SessionEntry, SessionReader } from "./types";
+import { cycleTransition } from "@/data/cycles/cycle-transition";
+import type { CycleEntry, CycleReader, ExerciseEntry, ExerciseReader, SessionEntry, SessionReader } from "./types";
 
 const entry = (exercise: (typeof exercises)[number]): ExerciseEntry => ({
   exercise,
@@ -44,5 +45,22 @@ export const demoSessionReader: SessionReader = {
     return sessions
       .filter((s) => s.blocks.some((b) => b.exerciseId === exerciseId))
       .map((s) => ({ id: s.id, number: s.number, title: s.title }));
+  },
+};
+
+const cycleEntry = (cycle: typeof cycleTransition): CycleEntry => ({ cycle, clubId: null, clubName: null, canEdit: false });
+
+/** Mode démonstration : un cycle de 4 semaines contenant la séance #14. */
+export const demoCycleReader: CycleReader = {
+  async list() {
+    return [cycleEntry(cycleTransition)];
+  },
+  async getById(id) {
+    return id === cycleTransition.id ? cycleEntry(cycleTransition) : null;
+  },
+  async containingSession(sessionId) {
+    return cycleTransition.weeks.some((w) => w.sessionIds.includes(sessionId))
+      ? [{ id: cycleTransition.id, title: cycleTransition.title, startDate: cycleTransition.startDate }]
+      : [];
   },
 };
