@@ -17,6 +17,8 @@ export const ExerciseSchema = z.object({
   id: z.string().min(1),
   slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "slug en minuscules, séparé par des tirets"),
   title: z.string().min(1).max(80),
+  /** Partie du titre mise en valeur en couleur de marque (ex. "+ 1"). Doit figurer dans le titre. */
+  titleAccent: z.string().min(1).max(20).optional(),
   kicker: z.string().max(60).optional(), // ex. "Transition · Supériorité numérique"
   themes: z.array(z.string().min(1)).max(6), // ex. ["Contre-attaque"]
   ageRange: z
@@ -55,6 +57,11 @@ export const ExerciseSchema = z.object({
 
   /** 06 · Le film (schéma tactique) */
   diagram: DiagramSchema,
+  /** Badge « ≈ N % du volume » affiché à côté du film. */
+  volumeSharePct: z.number().int().min(1).max(100).optional(),
+}).refine((e) => !e.titleAccent || e.title.includes(e.titleAccent), {
+  path: ["titleAccent"],
+  message: "La mise en valeur doit être une partie du titre",
 });
 export type Exercise = z.infer<typeof ExerciseSchema>;
 /** Données saisies/générées avant application des valeurs par défaut Zod. */

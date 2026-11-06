@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 
-export function SectionTitle({ n, children }: { n: string; children: ReactNode }) {
+export function SectionTitle({ n, icon, className = "mb-3", children }: { n: string; icon?: ReactNode; className?: string; children: ReactNode }) {
   return (
-    <h2 className="mb-3 flex items-baseline gap-2 font-display text-xl font-bold uppercase tracking-wide">
+    <h2 className={`flex items-baseline gap-2 font-display text-xl font-bold uppercase tracking-wide ${className}`}>
+      {icon}
       <span className="text-brand">{n}</span>
       {children}
     </h2>
@@ -26,5 +27,13 @@ export function Pill({ children, active }: { children: ReactNode; active?: boole
     <span className={`rounded-full border px-3 py-1 text-sm font-medium ${active ? "border-ink bg-ink text-white" : "border-ink/70"}`}>
       {children}
     </span>
+  );
+}
+
+export function BulbIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" className="self-center">
+      <path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }

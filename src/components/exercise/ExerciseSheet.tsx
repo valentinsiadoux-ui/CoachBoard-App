@@ -1,6 +1,6 @@
 import type { Exercise } from "@/lib/schemas";
 import { CourtDiagram } from "@/components/court/CourtDiagram";
-import { Logo, Pill, SectionTitle } from "./parts";
+import { BulbIcon, Logo, Pill, SectionTitle } from "./parts";
 
 const fmtRange = (r: { min: number; max: number }, unit = "") =>
   r.min === r.max ? `${r.min}${unit}` : `${r.min} – ${r.max}${unit}`;
@@ -75,7 +75,7 @@ export function ExerciseSheet({ exercise: ex }: { exercise: Exercise }) {
 
   const tips = ex.coachTips.length > 0 && (
     <section className="rounded-xl bg-brand-soft p-5 text-brand-deep">
-      <SectionTitle n="05">Conseils du coach</SectionTitle>
+      <SectionTitle n="05" icon={<BulbIcon />}>Conseils du coach</SectionTitle>
       {ex.coachTips.map((g) => (
         <div key={g.situation} className="mb-2 last:mb-0">
           <h3 className="mb-1 text-xs font-semibold uppercase tracking-widest">{g.situation}</h3>
@@ -89,8 +89,16 @@ export function ExerciseSheet({ exercise: ex }: { exercise: Exercise }) {
 
   const film = (
     <section className="rounded-xl bg-panel p-5">
-      <SectionTitle n="06">Le film · {spaceLabel}</SectionTitle>
-      <Legend />
+      <div className={`flex flex-wrap items-center gap-x-6 gap-y-2 ${full ? "justify-between" : ""}`}>
+        <div className="flex flex-1 items-center justify-between gap-3">
+          <SectionTitle n="06" className="mb-0">{full ? "Le film de l’exercice" : "Le film"} · {spaceLabel}</SectionTitle>
+          {!full && ex.volumeSharePct && <VolumeBadge pct={ex.volumeSharePct} />}
+        </div>
+        <div className={`flex items-center gap-4 ${full ? "" : "w-full"}`}>
+          <Legend />
+          {full && ex.volumeSharePct && <VolumeBadge pct={ex.volumeSharePct} />}
+        </div>
+      </div>
       <div className={`mt-3 grid gap-3 ${full ? "sm:grid-cols-2 xl:grid-cols-4" : "sm:grid-cols-2"}`}>
         {ex.diagram.frames.map((f, i) => (
           <figure key={f.title} className="rounded-lg bg-paper p-3">
@@ -98,7 +106,7 @@ export function ExerciseSheet({ exercise: ex }: { exercise: Exercise }) {
               <span className="grid size-6 place-items-center rounded bg-brand text-sm text-white">{i + 1}</span>
               {f.title}
             </figcaption>
-            <CourtDiagram court={ex.diagram.court} frame={f} className="w-full" />
+            <CourtDiagram court={ex.diagram.court} frame={f} className={full ? "w-full" : "mx-auto w-4/5"} />
             <p className="mt-2 text-xs text-muted">{f.caption}</p>
           </figure>
         ))}
@@ -114,7 +122,8 @@ export function ExerciseSheet({ exercise: ex }: { exercise: Exercise }) {
           <div className="text-center">
             {ex.kicker && <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted">{ex.kicker}</p>}
             <h1 className="font-display text-4xl font-bold uppercase md:text-5xl">
-              {ex.title} <span className="text-muted/70">· {full ? "Tout-terrain" : "Demi-terrain"}</span>
+              <Title title={ex.title} accent={ex.titleAccent} />{" "}
+              <span className="text-[0.6em] font-semibold text-ink/70">· {full ? "Tout-terrain" : "Demi-terrain"}</span>
             </h1>
           </div>
           <div className="flex flex-wrap gap-2 md:justify-end">
@@ -127,7 +136,7 @@ export function ExerciseSheet({ exercise: ex }: { exercise: Exercise }) {
 
       {full ? (
         <div className="space-y-6">
-          <div className="grid gap-8 lg:grid-cols-3">
+          <div className="grid gap-8 lg:grid-cols-3 lg:divide-x lg:divide-ink/10 lg:[&>*:not(:first-child)]:pl-8">
             <div className="space-y-6">{params}{challenge}</div>
             {steps}
             <div className="space-y-6">{technique}{tips}</div>
@@ -137,7 +146,7 @@ export function ExerciseSheet({ exercise: ex }: { exercise: Exercise }) {
       ) : (
         <div className="grid gap-8 lg:grid-cols-[1fr_1fr_1.5fr]">
           <div className="space-y-6">{params}{challenge}{tips}</div>
-          <div className="space-y-6">{steps}{technique}</div>
+          <div className="space-y-6 lg:border-l lg:border-ink/10 lg:pl-8">{steps}{technique}</div>
           {film}
         </div>
       )}
@@ -164,16 +173,37 @@ function Variant({ tone, title, items }: { tone: "good" | "warn"; title: string;
   );
 }
 
+/** Affiche le titre en mettant `accent` (s'il y figure) en couleur de marque. */
+function Title({ title, accent }: { title: string; accent?: string }) {
+  const at = accent ? title.indexOf(accent) : -1;
+  if (!accent || at < 0) return <>{title}</>;
+  return (
+    <>
+      {title.slice(0, at)}
+      <span className="text-brand">{accent}</span>
+      {title.slice(at + accent.length)}
+    </>
+  );
+}
+
+function VolumeBadge({ pct }: { pct: number }) {
+  return <span className="whitespace-nowrap rounded-full bg-paper px-3 py-1 text-xs font-semibold">≈ {pct} % du volume</span>;
+}
+
 function Legend() {
   const dot = (c: string, border = false) => (
     <span className="inline-block size-3 rounded-full" style={{ background: c, border: border ? "1px solid #16161A" : undefined }} />
   );
   return (
-    <ul className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+    <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
       <li className="flex items-center gap-1.5">{dot("#FFB800")} Attaquant</li>
       <li className="flex items-center gap-1.5">{dot("#16161A")} Défenseur</li>
       <li className="flex items-center gap-1.5">{dot("#9A9A9A", true)} +1</li>
       <li className="flex items-center gap-1.5"><span className="inline-block h-0.5 w-5 bg-ink" /> Course</li>
+      <li className="flex items-center gap-1.5">
+        <svg width="20" height="8" viewBox="0 0 20 8" aria-hidden="true"><polyline points="0,4 2.5,1 5,7 7.5,1 10,7 12.5,1 15,7 17.5,1 20,4" fill="none" stroke="#16161A" strokeWidth="1.5" /></svg>
+        Dribble
+      </li>
       <li className="flex items-center gap-1.5"><span className="inline-block w-5 border-t-2 border-dashed border-ink" /> Passe</li>
       <li className="flex items-center gap-1.5"><span className="inline-block w-5 border-t-2 border-dotted" style={{ borderColor: "#E4572E" }} /> Tir</li>
     </ul>

@@ -8,7 +8,7 @@ export const COURT = {
 } as const;
 
 /** Rayon des pions (joueurs, cônes) en unités SVG, par type de terrain. */
-export const MARKER_RADIUS: Record<CourtType, number> = { half: 16, full: 24 };
+export const MARKER_RADIUS: Record<CourtType, number> = { half: 18, full: 20 };
 
 /** Panier (côté droit en plein terrain) en coordonnées normalisées. */
 export const BASKET: Record<CourtType, Point> = {

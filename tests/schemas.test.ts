@@ -77,3 +77,10 @@ describe("lisibilité des schémas", () => {
     }
   });
 });
+
+describe("mise en valeur du titre", () => {
+  it("refuse une mise en valeur absente du titre", () => {
+    const bad = { ...exercises[0]!, titleAccent: "+ 9" };
+    expect(ExerciseSchema.safeParse(bad).success).toBe(false);
+  });
+});
