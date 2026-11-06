@@ -1,6 +1,6 @@
 import type { Exercise } from "@/lib/schemas";
 import { CourtDiagram } from "@/components/court/CourtDiagram";
-import { BulbIcon, Logo, Pill, SectionTitle } from "./parts";
+import { AccentTitle, BulbIcon, Logo, Pill, SectionTitle } from "./parts";
 
 /**
  * Part de la surface de la fiche occupée par le film (« volume spatial »).
@@ -128,7 +128,7 @@ export function ExerciseSheet({ exercise: ex }: { exercise: Exercise }) {
           <div className="text-center">
             {ex.kicker && <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted">{ex.kicker}</p>}
             <h1 className="font-display text-4xl font-bold uppercase md:text-5xl">
-              <Title title={ex.title} accent={ex.titleAccent} />{" "}
+              <AccentTitle title={ex.title} accent={ex.titleAccent} />{" "}
               <span className="text-[0.6em] font-semibold text-ink/70">· {full ? "Tout-terrain" : "Demi-terrain"}</span>
             </h1>
           </div>
@@ -176,19 +176,6 @@ function Variant({ tone, title, items }: { tone: "good" | "warn"; title: string;
       <h3 className={`text-xs font-semibold uppercase tracking-wider ${tone === "good" ? "text-good" : "text-warn"}`}>{title}</h3>
       {items.map((i) => <p key={i} className="text-sm">{i}</p>)}
     </div>
-  );
-}
-
-/** Affiche le titre en mettant `accent` (s'il y figure) en couleur de marque. */
-function Title({ title, accent }: { title: string; accent?: string }) {
-  const at = accent ? title.indexOf(accent) : -1;
-  if (!accent || at < 0) return <>{title}</>;
-  return (
-    <>
-      {title.slice(0, at)}
-      <span className="text-brand">{accent}</span>
-      {title.slice(at + accent.length)}
-    </>
   );
 }
 

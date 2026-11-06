@@ -2,7 +2,7 @@ import type { ZodIssue } from "zod";
 
 export type FormIssue = { path: string; label: string; message: string };
 
-const SECTIONS: Record<string, string> = {
+export const EXERCISE_SECTIONS: Record<string, string> = {
   title: "Titre",
   titleAccent: "Mise en valeur du titre",
   kicker: "Surtitre",
@@ -19,7 +19,33 @@ const SECTIONS: Record<string, string> = {
   diagram: "06 · Le film",
 };
 
+export const SESSION_SECTIONS: Record<string, string> = {
+  number: "Numéro",
+  title: "Titre",
+  category: "Catégorie",
+  team: "Équipe",
+  playersCount: "Joueurs",
+  plannedDurationMin: "Durée prévue",
+  keyInfo: "Bandeau",
+  blocks: "01 · Déroulement › phase",
+  globalTip: "Conseil global",
+  flagship: "02 · Situation phare",
+};
+
 const FIELDS: Record<string, string> = {
+  exerciseId: "exercice",
+  content: "contenu",
+  goal: "objectif",
+  phase: "phase",
+  mainObjective: "objectif principal",
+  technicalFocus: "focus technique",
+  spaceEquipment: "espace & matériel",
+  assistance: "assistance",
+  titleAccent: "partie en couleur",
+  challengeStatement: "énoncé du défi",
+  technicalPoints: "consigne",
+  rotations: "rotation",
+  accompanimentTip: "conseil d’accompagnement",
   durationMin: "durée",
   players: "joueurs",
   space: "espace",
@@ -45,12 +71,12 @@ const FIELDS: Record<string, string> = {
 };
 
 /** Chemin Zod → libellé lisible, ex. ["steps", 1, "title"] → « 03 · Déroulé › n°2 › titre ». */
-export function labelForPath(path: (string | number)[]): string {
+export function labelForPath(path: (string | number)[], sections: Record<string, string> = EXERCISE_SECTIONS): string {
   const [head, ...rest] = path;
-  const parts = [SECTIONS[String(head)] ?? String(head)];
+  const parts = [sections[String(head)] ?? String(head)];
   for (const p of rest) parts.push(typeof p === "number" ? `n°${p + 1}` : FIELDS[p] ?? p);
   return parts.join(" › ");
 }
 
-export const toFormIssues = (issues: ZodIssue[]): FormIssue[] =>
-  issues.map((i) => ({ path: i.path.join("."), label: labelForPath(i.path), message: i.message }));
+export const toFormIssues = (issues: ZodIssue[], sections: Record<string, string> = EXERCISE_SECTIONS): FormIssue[] =>
+  issues.map((i) => ({ path: i.path.join("."), label: labelForPath(i.path, sections), message: i.message }));

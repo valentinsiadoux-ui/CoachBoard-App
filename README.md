@@ -36,7 +36,9 @@ les exercices de démo, en lecture seule, sans connexion.
   (alimentée par le seed). On peut la dupliquer dans son club.
 - **Documents JSON** : un exercice est stocké tel que décrit par `ExerciseSchema` (Zod) dans
   la colonne `content`. Les colonnes de filtre sont générées par la base depuis ce JSON.
-- **Séances** : table créée dès l'étape 2, interface à l'étape 3.
+- **Séances** : partagées avec le club comme les exercices. Chaque phase reprend un exercice
+  de la banque ou un contenu libre ; la durée totale est calculée. La situation phare est
+  détaillée en seconde partie de fiche, avec des adaptations propres à la séance.
 
 ### Tests de la base
 
@@ -56,8 +58,11 @@ Une base temporaire est créée puis supprimée. Sans `TEST_DATABASE_URL`, ces t
 - `src/lib/filters.ts` : filtres de la banque (URL ↔ Zod ↔ SQL / mémoire)
 - `src/lib/repo/` : accès aux données (démo en mémoire ou Supabase)
 - `src/lib/supabase/` : clients Supabase et types de la base
-- `src/components/` : terrain SVG, fiche d'exercice, banque, formulaire
+- `src/components/` : terrain SVG, fiche d'exercice, fiche de séance (A4), banque, formulaires
 - `src/data/` : exercices et séance de démonstration (typés et validés)
+
+Après une mise à jour des exercices de démonstration, régénérer et réappliquer `supabase/seed.sql`
+(sans risque : il met à jour les exercices de la bibliothèque existants).
 - `supabase/` : migration SQL et seed
 
 ## Feuille de route

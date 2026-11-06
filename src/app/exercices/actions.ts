@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { ExerciseSchema } from "@/lib/schemas";
 import { getWritableRepository } from "@/lib/repo";
-import { DbError } from "@/lib/repo/supabase";
+import { DbError } from "@/lib/repo/errors";
 import { nextSlug, slugify } from "@/lib/slug";
 import { toFormIssues, type FormIssue } from "@/components/exercise-form/issues";
 

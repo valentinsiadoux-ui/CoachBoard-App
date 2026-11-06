@@ -31,6 +31,7 @@ export const exercice3c2p1Tout = ExerciseSchema.parse({
     frames: [
       {
         title: "Départ",
+        tag: "3c2",
         caption: "3 attaquants en fond de court, 2 défenseurs en repli, le +1 attend au milieu.",
         actions: [],
         elements: [
@@ -44,6 +45,7 @@ export const exercice3c2p1Tout = ExerciseSchema.parse({
       },
       {
         title: "Contre-attaque",
+        tag: "Passe",
         caption: "Projection immédiate dans les 3 couloirs, le porteur remonte le centre.",
         ghosts: [{ x: 0.04, y: 0.19 }, { x: 0.04, y: 0.81 }],
         actions: [
@@ -62,6 +64,7 @@ export const exercice3c2p1Tout = ExerciseSchema.parse({
       },
       {
         title: "Fixation & +1",
+        tag: "+1",
         caption: "Le porteur attaque le cercle pour fixer ; le +1 rentre dès la ligne à 3 points.",
         actions: [
           { type: "dribble", points: [{ x: 0.65, y: 0.5 }, { x: 0.75, y: 0.5 }] },
@@ -80,6 +83,7 @@ export const exercice3c2p1Tout = ExerciseSchema.parse({
       },
       {
         title: "Passe & finition",
+        tag: "Tir",
         caption: "Décalage vers l’ailier libre et tir en supériorité avant le repli du +1.",
         actions: [
           { type: "pass", points: [{ x: 0.78, y: 0.44 }, { x: 0.84, y: 0.25 }] },

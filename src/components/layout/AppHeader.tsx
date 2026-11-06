@@ -12,6 +12,7 @@ export async function AppHeader() {
         <Link href="/" aria-label="Accueil CoachBoard"><Logo /></Link>
         <nav className="flex gap-4 text-sm font-medium">
           <Link href="/" className="hover:text-brand-deep">Banque d’exercices</Link>
+          <Link href="/seances" className="hover:text-brand-deep">Séances</Link>
           {viewer?.mode === "supabase" && <Link href="/club" className="hover:text-brand-deep">Mon club</Link>}
         </nav>
         <div className="ml-auto flex items-center gap-3 text-sm">

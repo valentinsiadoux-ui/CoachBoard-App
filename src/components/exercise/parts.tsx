@@ -37,3 +37,24 @@ export function BulbIcon() {
     </svg>
   );
 }
+
+/** Affiche le titre en mettant `accent` (s'il y figure) en couleur de marque. */
+export function AccentTitle({ title, accent }: { title: string; accent?: string }) {
+  const at = accent ? title.indexOf(accent) : -1;
+  if (!accent || at < 0) return <>{title}</>;
+  return (
+    <>
+      {title.slice(0, at)}
+      <span className="text-brand">{accent}</span>
+      {title.slice(at + accent.length)}
+    </>
+  );
+}
+
+export function SparkIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" className="inline-block align-[-2px]">
+      <path d="M12 2v6M12 16v6M2 12h6M16 12h6M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M4.9 19.1l4.2-4.2M14.9 9.1l4.2-4.2" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}

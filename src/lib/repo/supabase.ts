@@ -6,17 +6,15 @@ import type { Exercise } from "@/lib/schemas";
 import type { Json } from "@/lib/supabase/database.types";
 import type { SupabaseServer } from "@/lib/supabase/server";
 import type { ExerciseEntry, ExerciseReader, Membership } from "./types";
+import { DbError, fail, isUuid } from "./errors";
+
+export { DbError };
 
 const COLUMNS = "id, club_id, author_id, content";
 const LIST_LIMIT = 200;
 
 type Row = { id: string; club_id: string | null; author_id: string | null; content: unknown };
 
-export class DbError extends Error {}
-
-function fail(context: string, error: { message: string; code?: string } | null): never {
-  throw new DbError(`${context} : ${error?.message ?? "erreur inconnue"}`);
-}
 
 /** Banque d'exercices sur Supabase ; les droits réels sont garantis par la RLS. */
 export class SupabaseExerciseRepository implements ExerciseReader {
@@ -70,7 +68,16 @@ export class SupabaseExerciseRepository implements ExerciseReader {
     return [...new Set(all)].sort((a, b) => a.localeCompare(b, "fr"));
   }
 
+  async getByIds(ids: string[]): Promise<ExerciseEntry[]> {
+    const valid = [...new Set(ids)].filter(isUuid);
+    if (!valid.length) return [];
+    const { data, error } = await this.sb.from("exercises").select(COLUMNS).in("id", valid);
+    if (error) fail("Lecture des exercices", error);
+    return (data as Row[]).map((r) => this.toEntry(r));
+  }
+
   async getById(id: string): Promise<ExerciseEntry | null> {
+    if (!isUuid(id)) return null;
     const { data, error } = await this.sb.from("exercises").select(COLUMNS).eq("id", id).maybeSingle();
     if (error) fail("Lecture de l'exercice", error);
     return data ? this.toEntry(data as Row) : null;

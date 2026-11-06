@@ -26,3 +26,18 @@ describe("règles de séance", () => {
     expect(SessionSchema.safeParse({ ...seance14, blocks }).success).toBe(false);
   });
 });
+
+describe("aides de la fiche de séance", () => {
+  it("numérote la fiche phare et répartit la frise", async () => {
+    const { flagshipSheetNumber, timelineShares } = await import("@/lib/schemas");
+    expect(flagshipSheetNumber(seance14)).toBe("14.3");
+    const shares = timelineShares(seance14);
+    expect(shares.reduce((a, b) => a + b, 0)).toBeCloseTo(100);
+    expect(shares[3]).toBeCloseTo((25 / 90) * 100);
+  });
+
+  it("refuse une situation phare sans exercice", () => {
+    const blocks = [{ phase: "situation", durationMin: 20, content: "Libre", isFlagship: true }];
+    expect(SessionSchema.safeParse({ ...seance14, blocks }).success).toBe(false);
+  });
+});
