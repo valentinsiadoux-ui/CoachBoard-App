@@ -34,7 +34,7 @@ export const exercice3c2p1Tout = ExerciseSchema.parse({
         actions: [],
         elements: [
           { id: "a1", kind: "attacker", label: "1", at: { x: 0.05, y: 0.2 } },
-          { id: "a2", kind: "attacker", label: "2", at: { x: 0.09, y: 0.5 }, hasBall: true },
+          { id: "a2", kind: "attacker", label: "2", at: { x: 0.13, y: 0.5 }, hasBall: true },
           { id: "a3", kind: "attacker", label: "3", at: { x: 0.05, y: 0.8 } },
           { id: "d1", kind: "defender", at: { x: 0.82, y: 0.4 } },
           { id: "d2", kind: "defender", at: { x: 0.82, y: 0.6 } },
@@ -48,7 +48,7 @@ export const exercice3c2p1Tout = ExerciseSchema.parse({
         actions: [
           { type: "run", points: [{ x: 0.08, y: 0.2 }, { x: 0.74, y: 0.2 }] },
           { type: "run", points: [{ x: 0.08, y: 0.8 }, { x: 0.74, y: 0.8 }] },
-          { type: "dribble", points: [{ x: 0.1, y: 0.5 }, { x: 0.7, y: 0.5 }] },
+          { type: "dribble", points: [{ x: 0.13, y: 0.5 }, { x: 0.7, y: 0.5 }] },
         ],
         elements: [
           { id: "a1", kind: "attacker", label: "1", at: { x: 0.78, y: 0.2 } },
@@ -81,14 +81,14 @@ export const exercice3c2p1Tout = ExerciseSchema.parse({
         title: "Passe & finition",
         caption: "Décalage vers l’ailier libre et tir en supériorité avant le repli du +1.",
         actions: [
-          { type: "pass", points: [{ x: 0.84, y: 0.48 }, { x: 0.88, y: 0.26 }] },
-          { type: "shot", points: [{ x: 0.89, y: 0.24 }, { x: 0.94, y: 0.48 }] },
+          { type: "pass", points: [{ x: 0.83, y: 0.47 }, { x: 0.88, y: 0.26 }] },
+          { type: "shot", points: [{ x: 0.89, y: 0.24 }, { x: 0.944, y: 0.5 }] },
         ],
         elements: [
           { id: "a1", kind: "attacker", label: "1", at: { x: 0.9, y: 0.22 }, hasBall: true },
           { id: "a2", kind: "attacker", label: "2", at: { x: 0.82, y: 0.5 } },
           { id: "a3", kind: "attacker", label: "3", at: { x: 0.9, y: 0.82 } },
-          { id: "d1", kind: "defender", at: { x: 0.87, y: 0.5 } },
+          { id: "d1", kind: "defender", at: { x: 0.9, y: 0.5 } },
           { id: "d2", kind: "defender", at: { x: 0.92, y: 0.64 } },
           { id: "p1", kind: "plus_one", at: { x: 0.78, y: 0.72 } },
         ],

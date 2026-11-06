@@ -1,17 +1,20 @@
 import type { CourtType, Point } from "@/lib/schemas";
+import { FIBA } from "./fiba";
 
 /** Échelle : 30 unités SVG = 1 mètre. Cotes FIBA. */
 export const COURT = {
-  half: { width: 450, height: 420 }, // 15 m × 14 m
-  full: { width: 840, height: 450 }, // 28 m × 15 m
+  half: { width: FIBA.width, height: FIBA.halfLength }, // 15 m × 14 m
+  full: { width: FIBA.halfLength * 2, height: FIBA.width }, // 28 m × 15 m
 } as const;
 
-/** Panier en coordonnées normalisées. */
-export const BASKET: Record<CourtType, Point> = {
-  half: { x: 0.5, y: 47 / 420 },
-  full: { x: (840 - 47) / 840, y: 0.5 },
-};
+/** Rayon des pions (joueurs, cônes) en unités SVG, par type de terrain. */
+export const MARKER_RADIUS: Record<CourtType, number> = { half: 16, full: 24 };
 
+/** Panier (côté droit en plein terrain) en coordonnées normalisées. */
+export const BASKET: Record<CourtType, Point> = {
+  half: { x: 0.5, y: FIBA.basketY / FIBA.halfLength },
+  full: { x: 1 - FIBA.basketY / (FIBA.halfLength * 2), y: 0.5 },
+};
 export function toSvg(court: CourtType, p: Point): { x: number; y: number } {
   const { width, height } = COURT[court];
   return { x: p.x * width, y: p.y * height };

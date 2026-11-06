@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DiagramFrameSchema, ExerciseSchema } from "@/lib/schemas";
+import { BASKET, COURT, MARKER_RADIUS } from "@/lib/court/geometry";
 import { exercises } from "@/data/exercises";
 
 describe("exercices de démonstration", () => {
@@ -45,5 +46,34 @@ describe("règles de validation", () => {
   it("refuse une plage de catégories inversée", () => {
     const bad = { ...exercises[0]!, ageRange: { from: "Seniors", to: "U13" } };
     expect(ExerciseSchema.safeParse(bad).success).toBe(false);
+  });
+});
+
+describe("lisibilité des schémas", () => {
+  it("aucun pion ne se chevauche dans une vignette", () => {
+    for (const ex of exercises) {
+      const court = ex.diagram.court;
+      const { width, height } = COURT[court];
+      const r = MARKER_RADIUS[court];
+      ex.diagram.frames.forEach((f) => {
+        f.elements.forEach((a, i) =>
+          f.elements.slice(i + 1).forEach((b) => {
+            const d = Math.hypot((a.at.x - b.at.x) * width, (a.at.y - b.at.y) * height);
+            expect(d, `${ex.slug} · ${f.title} : ${a.id} / ${b.id}`).toBeGreaterThanOrEqual(2 * r);
+          }),
+        );
+      });
+    }
+  });
+
+  it("les tirs visent le panier", () => {
+    for (const ex of exercises) {
+      const basket = BASKET[ex.diagram.court];
+      ex.diagram.frames.flatMap((f) => f.actions).filter((a) => a.type === "shot").forEach((a) => {
+        const end = a.points[a.points.length - 1]!;
+        expect(Math.abs(end.x - basket.x), ex.slug).toBeLessThan(0.01);
+        expect(Math.abs(end.y - basket.y), ex.slug).toBeLessThan(0.01);
+      });
+    }
   });
 });

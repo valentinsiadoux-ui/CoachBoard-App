@@ -1,6 +1,6 @@
 import { useId } from "react";
 import type { CourtType, DiagramAction, DiagramElement, DiagramFrame } from "@/lib/schemas";
-import { COURT, polyline, toSvg, trimEnd, zigzag } from "@/lib/court/geometry";
+import { COURT, MARKER_RADIUS, polyline, toSvg, trimEnd, zigzag } from "@/lib/court/geometry";
 import { COLORS } from "@/lib/court/tokens";
 import { CourtLines } from "./CourtLines";
 
@@ -9,7 +9,7 @@ type Props = { court: CourtType; frame: DiagramFrame; className?: string };
 export function CourtDiagram({ court, frame, className }: Props) {
   const uid = useId().replace(/:/g, "");
   const { width, height } = COURT[court];
-  const r = court === "full" ? 17 : 14;
+  const r = MARKER_RADIUS[court];
   const arrowId = (c: string) => `arrow-${uid}-${c}`;
 
   const strokeColor = (a: DiagramAction): string => {

@@ -80,7 +80,7 @@ export const exercice3c2p1Demi = ExerciseSchema.parse({
         caption: "Décalage vers l’aile opposée au +1 et tir en supériorité.",
         actions: [
           { type: "pass", points: [{ x: 0.5, y: 0.55 }, { x: 0.14, y: 0.5 }] },
-          { type: "shot", points: [{ x: 0.12, y: 0.5 }, { x: 0.46, y: 0.14 }] },
+          { type: "shot", points: [{ x: 0.12, y: 0.5 }, { x: 0.5, y: 0.1125 }] },
         ],
         elements: [
           { id: "a1", kind: "attacker", label: "1", at: { x: 0.1, y: 0.5 }, hasBall: true },
