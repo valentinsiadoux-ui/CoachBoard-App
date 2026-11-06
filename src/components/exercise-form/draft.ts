@@ -31,8 +31,9 @@ export const newDraft = (): { draft: Draft; diagramText: string } => ({
   diagramText: JSON.stringify({ court: "half", frames: [emptyFrame("Départ")] }, null, 2),
 });
 
-export function draftFromExercise(ex: ExerciseInput): { draft: Draft; diagramText: string } {
-  const { id: _id, diagram, ...rest } = ex;
+export function draftFromExercise(ex: ExerciseInput | Omit<ExerciseInput, "id">): { draft: Draft; diagramText: string } {
+  const { diagram, ...rest } = ex as ExerciseInput;
+  delete (rest as { id?: string }).id;
   return {
     draft: {
       ...rest,

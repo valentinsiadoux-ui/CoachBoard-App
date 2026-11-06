@@ -46,6 +46,18 @@ export type Database = {
         Update: { display_name?: string | null };
         Relationships: [];
       };
+      ai_generations: {
+        Row: {
+          id: string; user_id: string; kind: "exercise" | "session"; status: "ok" | "invalid" | "refused" | "error";
+          model: string; attempts: number; input_tokens: number; output_tokens: number; created_at: string;
+        };
+        Insert: {
+          kind: "exercise" | "session"; status: "ok" | "invalid" | "refused" | "error";
+          model: string; attempts?: number; input_tokens?: number; output_tokens?: number;
+        };
+        Update: never;
+        Relationships: [];
+      };
       clubs: {
         Row: { id: string; name: string; invite_code: string; created_at: string };
         Insert: never;

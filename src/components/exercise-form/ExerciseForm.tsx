@@ -12,7 +12,13 @@ import { buildPayload, draftFromExercise, newDraft, validateDraft, type Draft } 
 import { toFormIssues, type FormIssue } from "./issues";
 import { LinesInput, ListEditor, NumberInput, Select, TextArea, TextInput, inputCls, labelCls } from "./fields";
 
-type Props = { initial?: ExerciseInput & { id: string }; clubs: Membership[] };
+type Props = {
+  /** Exercice existant (modification). */
+  initial?: ExerciseInput & { id: string };
+  /** Brouillon de départ pour une création (ex. proposé par le co-pilote IA). */
+  seed?: ExerciseInput;
+  clubs: Membership[];
+};
 
 const ageOptions = AGE_CATEGORIES.map((c) => ({ value: c, label: c }));
 const difficultyOptions = (Object.keys(DIFFICULTY_LABELS) as (keyof typeof DIFFICULTY_LABELS)[]).map((v) => ({ value: v, label: DIFFICULTY_LABELS[v] }));
@@ -26,8 +32,12 @@ function Section({ n, title, children }: { n: string; title: string; children: R
   );
 }
 
-export function ExerciseForm({ initial, clubs }: Props) {
-  const start = useMemo(() => (initial ? draftFromExercise(initial) : newDraft()), [initial]);
+export function ExerciseForm({ initial, seed, clubs }: Props) {
+  const start = useMemo(() => {
+    if (initial) return draftFromExercise(initial);
+    if (seed) return draftFromExercise(seed);
+    return newDraft();
+  }, [initial, seed]);
   const [draft, setDraft] = useState<Draft>(start.draft);
   const [diagramText, setDiagramText] = useState(start.diagramText);
   const [clubId, setClubId] = useState(clubs[0]?.clubId ?? "");

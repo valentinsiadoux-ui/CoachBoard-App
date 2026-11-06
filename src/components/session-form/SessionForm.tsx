@@ -18,6 +18,8 @@ import {
 
 type Props = {
   initial?: SessionInput & { id: string };
+  /** Brouillon de départ pour une création (ex. proposé par le co-pilote IA). */
+  seed?: SessionInput;
   clubs: Membership[];
   /** Prochain numéro libre par club (création). */
   nextNumbers: Record<string, number>;
@@ -40,9 +42,13 @@ function Section({ n, title, aside, children }: { n: string; title: string; asid
   );
 }
 
-export function SessionForm({ initial, clubs, nextNumbers, exercises }: Props) {
+export function SessionForm({ initial, seed, clubs, nextNumbers, exercises }: Props) {
   const firstClub = clubs[0]?.clubId ?? "";
-  const start = useMemo(() => (initial ? draftFromSession(initial) : newSessionDraft(nextNumbers[firstClub] ?? 1)), [initial, nextNumbers, firstClub]);
+  const start = useMemo(() => {
+    if (initial) return draftFromSession(initial);
+    if (seed) return draftFromSession(seed);
+    return newSessionDraft(nextNumbers[firstClub] ?? 1);
+  }, [initial, seed, nextNumbers, firstClub]);
   const [d, setD] = useState<SessionDraft>(start);
   const [clubId, setClubId] = useState(firstClub);
   const [attempted, setAttempted] = useState(false);

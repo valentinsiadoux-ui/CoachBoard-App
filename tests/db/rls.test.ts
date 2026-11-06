@@ -72,6 +72,7 @@ describe.skipIf(!ADMIN_URL)("base de données · migration et RLS", () => {
     await db.connect();
     await db.query(sql("tests/db/supabase-stub.sql"));
     await db.query(sql("supabase/migrations/20261106000000_banque_exercices.sql"));
+    await db.query(sql("supabase/migrations/20261107000000_journal_ia.sql"));
     await db.query(sql("supabase/seed.sql"));
     for (const [name, id] of Object.entries(USERS)) {
       await db.query("insert into auth.users (id, email) values ($1, $2)", [id, `${name}@club.test`]);
@@ -236,6 +237,28 @@ describe.skipIf(!ADMIN_URL)("base de données · migration et RLS", () => {
         q("select number from sessions where content @> $1", [JSON.stringify({ blocks: [{ exerciseId: seance14.blocks[2]!.exerciseId }] })]),
       );
       expect(r.rows).toEqual([{ number: 14 }]);
+    });
+  });
+
+  describe("journal du co-pilote IA", () => {
+    const log = (u: User) =>
+      as(u, (q) => q("insert into ai_generations (kind, status, model, input_tokens, output_tokens) values ('exercise', 'ok', 'm', 10, 20)"));
+
+    it("chacun ne voit que ses propres générations", async () => {
+      await log("bob");
+      await log("bob");
+      await log("alice");
+      const bob = await as("bob", (q) => q("select count(*)::int as n from ai_generations"));
+      const alice = await as("alice", (q) => q("select count(*)::int as n from ai_generations"));
+      expect([bob.rows[0].n, alice.rows[0].n]).toEqual([2, 1]);
+    });
+
+    it("le journal ne peut être ni modifié ni effacé (quota non contournable)", async () => {
+      await expect(as("bob", (q) => q("delete from ai_generations"))).rejects.toThrow(/permission denied/);
+      await expect(as("bob", (q) => q("update ai_generations set status = 'error'"))).rejects.toThrow(/permission denied/);
+      await expect(
+        as("bob", (q) => q("insert into ai_generations (user_id, kind, status, model) values ($1, 'exercise', 'ok', 'm')", [USERS.alice])),
+      ).rejects.toThrow(/permission denied/);
     });
   });
 

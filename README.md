@@ -18,7 +18,7 @@ les exercices de démo, en lecture seule, sans connexion.
 ## Brancher Supabase (étape 2)
 
 1. Créer un projet sur supabase.com.
-2. Appliquer le schéma : coller `supabase/migrations/20261106000000_banque_exercices.sql`
+2. Appliquer le schéma : coller les fichiers de `supabase/migrations/`, dans l'ordre de leur nom,
    dans l'éditeur SQL du projet (ou `supabase db push` avec la CLI reliée au projet).
 3. Charger la bibliothèque CoachBoard : coller `supabase/seed.sql` dans l'éditeur SQL.
    Ce fichier est généré depuis `src/data/exercises` par `npm run db:seed`.
@@ -58,6 +58,22 @@ passe, tir, position de départ), placement au clic, déplacement par glisser-d�
 doigt), tracés aimantés sur les joueurs, tir dirigé automatiquement vers le panier, vignettes
 (« Vignette suivante » reprend les positions), annuler / rétablir, alertes de lisibilité
 (pions qui se chevauchent, tir hors panier). Le JSON reste accessible en mode avancé.
+
+## Co-pilote IA (Claude)
+
+Sur « Nouvel exercice » et « Nouvelle séance », le co-pilote propose une fiche complète à partir
+d'une demande en langage courant (schéma tactique compris ; pour une séance, il réutilise les
+exercices de la banque). La proposition est chargée dans le formulaire : rien n'est enregistré
+sans validation du coach.
+
+- Modèle : Claude Opus 5.5 (`claude-opus-5-5`), sortie JSON structurée, validée par les mêmes
+  schémas Zod que l'application + contrôles de lisibilité ; en cas d'écart, l'IA corrige
+  (2 corrections au plus). Repli automatique côté serveur si le modèle décline une demande.
+- Mise en service : ajouter `ANTHROPIC_API_KEY` (console.anthropic.com) dans les variables
+  d'environnement Vercel, puis exécuter `supabase/migrations/20261107000000_journal_ia.sql`.
+- Coût : facturé à l'usage par Anthropic ; chaque génération est journalisée (table
+  `ai_generations`) et limitée par coach (`AI_DAILY_LIMIT`, 20 par 24 h par défaut).
+- Durée : 30 s à 2 min ; les pages concernées autorisent 300 s d'exécution sur Vercel.
 
 ## Export PDF
 
