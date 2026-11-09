@@ -67,6 +67,22 @@ cycle. La fiche affiche la frise des semaines (dates, séances, charge en minute
 en PDF sur une page A4 paysage. Mise en service : exécuter
 `supabase/migrations/20261108000000_cycles.sql`.
 
+## IA par copier-coller (gratuit)
+
+Sans clé API, l'aide de l'IA reste disponible par copier-coller, avec votre propre compte
+claude.ai (offre gratuite comprise) ou un autre assistant :
+
+1. « Copier la demande » : consignes, repères du terrain, schéma JSON, votre demande (et, pour une
+   séance, les exercices de votre banque). Case « Compléter la fiche en cours » : la fiche
+   commencée est jointe et l'IA ne remplit que ce qui manque.
+2. Coller la demande dans claude.ai, copier la réponse.
+3. « Importer dans le formulaire » : le JSON est retrouvé dans la réponse, corrigé si besoin
+   (tirs, coordonnées) et validé comme en mode API. En cas d'écart, l'application prépare le
+   message de correction à recoller dans la même conversation.
+
+Disponible en création et en modification des exercices et des séances. La démarche reste
+manuelle : automatiser claude.ai est contraire à ses conditions d'utilisation.
+
 ## Co-pilote IA (Claude)
 
 Sur « Nouvel exercice » et « Nouvelle séance », le co-pilote propose une fiche complète à partir

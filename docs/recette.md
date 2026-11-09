@@ -44,6 +44,15 @@ Cocher chaque ligne ; noter tout écart avec la page, l'action et le message aff
 - [ ] Le compteur « génération(s) restante(s) » diminue.
 - [ ] Sans clé (facultatif) : message « Co-pilote IA désactivé ».
 
+## E bis. IA par copier-coller (sans clé API)
+
+- [ ] Nouvel exercice → « Copier la demande » sans description → message demandant de décrire l'exercice.
+- [ ] Décrire l'exercice → « Copier la demande » → coller dans claude.ai → copier toute sa réponse.
+- [ ] « Importer dans le formulaire » → la fiche remplit le formulaire, schéma compris.
+- [ ] Si des erreurs s'affichent : « Copier le message de correction » → le recoller dans la même conversation → réimporter.
+- [ ] Modifier un exercice → cocher « Compléter la fiche en cours » → l'IA garde ce qui est rempli ; l'adresse de la fiche ne change pas.
+- [ ] Même parcours pour une séance (les exercices proposés viennent de votre banque ; numéro de séance conservé en modification).
+
 ## F. Séances
 
 - [ ] Nouvelle séance : numéro proposé, phases réordonnées au glisser-déposer (aussi au doigt sur tablette), exercice choisi dans la banque, durée totale et écart à la durée prévue en direct.

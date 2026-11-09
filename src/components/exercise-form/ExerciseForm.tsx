@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useMemo, useState, type FormEvent } from "react";
+import { useActionState, useEffect, useMemo, useState, type FormEvent } from "react";
 import { AGE_CATEGORIES, type ExerciseInput } from "@/lib/schemas";
 import { DIFFICULTY_LABELS } from "@/lib/filters";
 import type { Membership } from "@/lib/repo/types";
@@ -18,6 +18,8 @@ type Props = {
   /** Brouillon de départ pour une création (ex. proposé par le co-pilote IA). */
   seed?: ExerciseInput;
   clubs: Membership[];
+  /** Contenu courant du formulaire (JSON), transmis à chaque modification. */
+  onPayloadChange?: (payload: Record<string, unknown> | null) => void;
 };
 
 const ageOptions = AGE_CATEGORIES.map((c) => ({ value: c, label: c }));
@@ -32,7 +34,7 @@ function Section({ n, title, children }: { n: string; title: string; children: R
   );
 }
 
-export function ExerciseForm({ initial, seed, clubs }: Props) {
+export function ExerciseForm({ initial, seed, clubs, onPayloadChange }: Props) {
   const start = useMemo(() => {
     if (initial) return draftFromExercise(initial);
     if (seed) return draftFromExercise(seed);
@@ -70,6 +72,9 @@ export function ExerciseForm({ initial, seed, clubs }: Props) {
   }, [diagramText]);
   const preview = built.ok ? validateDraft(built.payload) : null;
   const payload = built.ok ? JSON.stringify(built.payload) : "";
+  useEffect(() => {
+    onPayloadChange?.(payload ? (JSON.parse(payload) as Record<string, unknown>) : null);
+  }, [payload, onPayloadChange]);
 
   const liveIssues: FormIssue[] = !built.ok
     ? [{ path: "diagram", label: "06 · Le film", message: built.jsonError }]

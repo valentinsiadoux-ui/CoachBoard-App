@@ -270,7 +270,7 @@ export function DiagramEditor({ value, onChange }: { value: EditorDiagram; onCha
                       {sel && <circle cx={s.x} cy={s.y} r={r + 6} fill="none" stroke="#2563EB" strokeWidth={2.5} strokeDasharray="5 3" />}
                       <circle cx={s.x} cy={s.y} r={r * 1.2} fill="transparent" style={{ cursor: LINE_TOOLS.includes(tool) || tool === "shot" ? "crosshair" : "grab" }}
                         onPointerDown={(e) => onElementDown(e, el.id)}>
-                        <title>{KIND_LABELS[el.kind]} {el.label ?? ""}</title>
+                        <title>{`${KIND_LABELS[el.kind]} ${el.label ?? ""}`.trim()}</title>
                       </circle>
                     </g>
                   );

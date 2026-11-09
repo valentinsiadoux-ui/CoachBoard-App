@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getViewer } from "@/lib/repo";
-import { NewExerciseWorkspace } from "@/components/ai/NewExerciseWorkspace";
+import { ExerciseWorkspace } from "@/components/ai/ExerciseWorkspace";
 import { isAiConfigured } from "@/lib/ai/config";
 
 /** Dépend de la session : jamais pré-rendue. */
@@ -19,7 +19,7 @@ export default async function NewExercisePage() {
     <main className="mx-auto max-w-5xl px-6 py-8">
       <Link href="/" className="text-sm text-muted underline-offset-4 hover:underline">Retour à la banque</Link>
       <h1 className="mb-6 mt-2 font-display text-4xl font-bold uppercase">Nouvel exercice</h1>
-      <NewExerciseWorkspace clubs={viewer.memberships} aiEnabled={isAiConfigured()} />
+      <ExerciseWorkspace clubs={viewer.memberships} aiEnabled={isAiConfigured()} />
     </main>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useMemo, useState, type FormEvent } from "react";
+import { useActionState, useEffect, useMemo, useState, type FormEvent } from "react";
 import { DndContext, KeyboardSensor, PointerSensor, closestCenter, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, arrayMove, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -20,6 +20,8 @@ type Props = {
   initial?: SessionInput & { id: string };
   /** Brouillon de départ pour une création (ex. proposé par le co-pilote IA). */
   seed?: SessionInput;
+  /** Contenu courant du formulaire (JSON), transmis à chaque modification. */
+  onPayloadChange?: (payload: Record<string, unknown>) => void;
   clubs: Membership[];
   /** Prochain numéro libre par club (création). */
   nextNumbers: Record<string, number>;
@@ -42,7 +44,7 @@ function Section({ n, title, aside, children }: { n: string; title: string; asid
   );
 }
 
-export function SessionForm({ initial, seed, clubs, nextNumbers, exercises }: Props) {
+export function SessionForm({ initial, seed, clubs, nextNumbers, exercises, onPayloadChange }: Props) {
   const firstClub = clubs[0]?.clubId ?? "";
   const start = useMemo(() => {
     if (initial) return draftFromSession(initial);
@@ -68,6 +70,10 @@ export function SessionForm({ initial, seed, clubs, nextNumbers, exercises }: Pr
   };
 
   const payload = buildSessionPayload(d);
+  const payloadJson = JSON.stringify(payload);
+  useEffect(() => {
+    onPayloadChange?.(JSON.parse(payloadJson) as Record<string, unknown>);
+  }, [payloadJson, onPayloadChange]);
   const preview = validateSession(payload);
   const issues: FormIssue[] = !preview.success ? toFormIssues(preview.error.issues, SESSION_SECTIONS) : [];
   const shown = attempted && issues.length ? issues : state.issues;
